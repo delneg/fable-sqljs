@@ -12,10 +12,11 @@ async function init() {
   await api.setup();
   document.body.innerHTML = "Worker Ready";
 
-  await api.createUser();
-  const users = await api.getUsers();
-  document.body.innerHTML = "Result:" + JSON.stringify(users);
-  console.log(users);
+  const data = [...Array(100).keys()].map((i) => [Math.random() * 1000, i]);
+  await api.runMany("INSERT INTO kv (key, value) VALUES (?, ?)", data);
+
+  const result = await api.run(`SELECT SUM(value) FROM kv`);
+  console.log(result);
 }
 
 init().catch(console.error);
