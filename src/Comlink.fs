@@ -6,9 +6,7 @@ open Fable.Core.JS
 
 type Symbol = obj
 
-//type Endpoint = __protocol.Endpoint
-//type EventSource = __protocol.EventSource
-//type PostMessageWithOrigin = __protocol.PostMessageWithOrigin
+
 let [<Import("proxyMarker","comlink")>] proxyMarker: Symbol = jsNative
 let [<Import("createEndpoint","comlink")>] createEndpoint: Symbol = jsNative
 let [<Import("releaseProxy","comlink")>] releaseProxy: Symbol = jsNative
@@ -17,7 +15,9 @@ let [<Import("transferHandlers","comlink")>] transferHandlers: Map<string, Trans
 
 let [<Import("wrap","comlink")>] wrap(ep: Protocol.Endpoint): Remote<'T> = jsNative
 let [<Import("expose","comlink")>] expose(obj: obj option): unit = jsNative
-
+let [<Import("transfer","comlink")>] transfer(obj:'T, transfers: ResizeArray<ArrayBuffer>): 'T = jsNative
+let [<Import("proxy","comlink")>] proxy(obj:'T): obj = jsNative
+let [<Import("windowEndpoint","comlink")>] windowEndpoint(w:Protocol.PostMessageWithOrigin): Protocol.Endpoint = jsNative
 
 //type [<AllowNullLiteral>] IExports =
 //    abstract expose: obj: obj option * ?ep: Protocol.Endpoint -> unit
