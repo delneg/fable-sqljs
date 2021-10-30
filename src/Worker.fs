@@ -9,6 +9,15 @@ let [<Import("SQLiteFS", from="absurd-sql")>] sqlitefs: obj = jsNative
 let IndexedDBBackend: JsConstructor = importDefault "absurd-sql/dist/indexeddb-backend"
 
 
+let pragmaParams = [|
+   "PRAGMA page_size=8192"
+   "PRAGMA journal_mode=MEMORY"
+   "PRAGMA mmap_size=0"
+   "PRAGMA synchronous=NORMAL"
+   "PRAGMA temp_store=MEMORY"
+|]
+let pragmaString = String.Join(";",pragmaParams)
+
 let mutable _db : SqlJs.Database option = None
 
 let db() =
@@ -31,7 +40,10 @@ let setupSqlJs (dbPath:string) = promise {
    SQL.FS?mkdir("/sql")
    SQL.FS?mount(sqlFs, {||},"/sql")
    let db: SqlJs.Database = createNew SQL.Database (dbPath, {|filename=true|}) :?> SqlJs.Database
-   db?exec("PRAGMA page_size=8192;PRAGMA journal_mode=MEMORY;PRAGMA mmap_size=0;PRAGMA synchronous=NORMAL;PRAGMA temp_store=MEMORY")
+   
+   JS.console.log("Executing...")
+   JS.console.log(pragmaString)
+   db?exec(pragmaString)
    _db <- Some db
 }
 
@@ -43,12 +55,17 @@ let setup() = promise {
 
 
 let execRaw (query: string) = promise {
+   JS.console.log("Executing...")
+   JS.console.log(query)
    return db().exec(query)
 }
 
 let runMany (query:string) argsList =
    promise {
+      JS.console.log("BEGIN TRANSACTION")
       db().exec("BEGIN TRANSACTION") |> ignore
+      JS.console.log("Preparing...")
+      JS.console.log(query)
       let stmt = db().prepare(query)
       let results = argsList
                     |> Array.map (fun args ->
@@ -56,11 +73,14 @@ let runMany (query:string) argsList =
                        stmt.getAsObject()
                     )
       stmt.free() |> ignore
+      JS.console.log("Commit")
       db().exec("COMMIT") |> ignore
       return results
    }
 
 let runPreparedStep(query: string) = promise {
+   JS.console.log("Preparing...")
+   JS.console.log(query)
    let stmt = db().prepare(query)
    stmt.step() |> ignore
    let result = stmt.getAsObject()
