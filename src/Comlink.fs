@@ -14,7 +14,7 @@ let [<Import("transferHandlers","comlink")>] transferHandlers: Map<string, Trans
 
 
 let [<Import("wrap","comlink")>] wrap(ep: Protocol.Endpoint): Remote<'T> = jsNative
-let [<Import("expose","comlink")>] expose(obj: obj option): unit = jsNative
+let [<Import("expose","comlink")>] expose(obj: obj): unit = jsNative
 let [<Import("transfer","comlink")>] transfer(obj:'T, transfers: ResizeArray<ArrayBuffer>): 'T = jsNative
 let [<Import("proxy","comlink")>] proxy(obj:'T): obj = jsNative
 let [<Import("windowEndpoint","comlink")>] windowEndpoint(w:Protocol.PostMessageWithOrigin): Protocol.Endpoint = jsNative
