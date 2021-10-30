@@ -1,7 +1,12 @@
 module App
 
+open Fable.Core
 open Fetch
 open Thoth.Json
+
+let [<Import("initBackend", from="absurd-sql/dist/indexeddb-main-thread")>] initBackend: unit -> unit = jsNative
+
+
 
 // we get a json from our fetch request with a url field
 // so we create this type to map the json object

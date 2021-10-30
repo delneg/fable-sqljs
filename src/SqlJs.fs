@@ -22,7 +22,7 @@ type [<AllowNullLiteral>] ParamsCallback =
     [<Emit "$0($1...)">] abstract Invoke: obj: ParamsObject -> unit
 
 type SqlJsConfig =
-    obj
+    abstract locateFile: url:string * scriptDirectory: string -> string
 
 type BindParams =
     U2<ResizeArray<SqlValue>, ParamsObject> option
@@ -38,8 +38,11 @@ type [<AllowNullLiteral>] StatementIteratorResult =
     abstract value: Statement with get, set
 
 type [<AllowNullLiteral>] SqlJsStatic =
-    abstract Database: obj with get, set
+    abstract Database: Database with get, set
     abstract Statement: obj with get, set
+    abstract FS: obj with get, set
+    
+    abstract register_for_idb: obj -> unit
 
 type [<AllowNullLiteral>] InitSqlJsStatic = 
     [<Emit "$0($1...)">] abstract Invoke: ?config: SqlJsConfig -> Promise<SqlJsStatic>
