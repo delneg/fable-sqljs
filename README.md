@@ -13,8 +13,8 @@ demo: https://heuristic-perlman-94f8f4.netlify.app/
 ## Develop
 
 ```
-yarn install
-yarn serve
+pnpm install
+pnpm serve
 ```
 
 ## Deploy to netlify
@@ -22,7 +22,7 @@ yarn serve
 to netlify
 
 ```bash
-$ yarn build
+$ pnpm build
 
 ### managed deploy
 # netlify unlink
@@ -58,8 +58,8 @@ This is a project to get quickly setup with [absurd-sql](https://github.com/jlon
 After cloning this project:
 
 ```
-$ yarn
-$ yarn serve
+$ pnpm install
+$ pnpm serve
 ```
 
 You should be able to go to [http://localhost:8080/](http://localhost:8080/), and open the console to see some query results.
