@@ -39,7 +39,7 @@ module.exports = (env, argv) => ({
     },
     plugins: [
         new HtmlWebpackPlugin({template: "./src/index.html"}),
-        new BundleAnalyzerPlugin(),
+        // new BundleAnalyzerPlugin({analyzerMode:"static"}),
         new DefinePlugin({
             "process.env.NODE_ENV": JSON.stringify(argv.mode),
             "process.env.PERF_BUILD": false,
