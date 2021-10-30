@@ -12,6 +12,12 @@ https://thirsty-goldberg-7a9141.netlify.app/
 
 Based on:
 [AbsurdSQL with type orm example](https://github.com/mizchi/absurd-sql-example-with-typeorm)
+
+## Explanation on why this is cool:
+
+https://jlongster.com/future-sql-web
+
+
 ## Develop
 
 ```
