@@ -8,8 +8,9 @@
     "fable",
     "fsharp"
   ],
+  "author": "delneg",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/App.fs.js",
   "license": "MIT",
   "scripts": {
     "postinstall": "dotnet tool restore",

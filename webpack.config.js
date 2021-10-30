@@ -15,6 +15,7 @@ module.exports = (env, argv) => ({
         },
     },
     entry: "./src/App.fs.js",
+    // entry: "./src/index.ts",
     resolve: {
         extensions: [".dev.js", ".js", ".json", ".wasm", ".ts", ".tsx"],
         fallback: {

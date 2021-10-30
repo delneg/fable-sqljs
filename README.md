@@ -1,15 +1,12 @@
-## PoC: typeorm + sqljs + absurd-sql + comlink
-
-demo: https://heuristic-perlman-94f8f4.netlify.app/
+## PoC: Fable + sqljs + absurd-sql + comlink
 
 - sql.js: wasm sqlite
 - absurd-sql: indexeddb backend sql.js adapter
 - comlink: WebWorker RPC
-- typeorm: ORM with sqlite(sql.js) adapter
-- netlify
 
-![](https://gyazo.com/2afcba1d33bd0d2699cf94323119a8a8.png)
 
+Based on:
+[AbsurdSQL with type orm example](https://github.com/mizchi/absurd-sql-example-with-typeorm)
 ## Develop
 
 ```
@@ -17,31 +14,15 @@ pnpm install
 pnpm serve
 ```
 
-## Deploy to netlify
-
-to netlify
-
-```bash
-$ pnpm build
-
-### managed deploy
-# netlify unlink
-$ netlify deploy --prod -d dist 
-```
-
 ## Deploy
 
-You need to set CORP/COEP headers for aburs-sql(SharedArrayBuffer)
-
-I put `dist/_headers` file for netilfy.
+You need to set CORP/COEP headers for absurd-sql(SharedArrayBuffer)
 
 ```
-/*
   Cross-Origin-Opener-Policy = "same-origin"
   Cross-Origin-Embedder-Policy = "require-corp"
 ```
 
-Set those headers for other env.
 
 ## LICENSE
 

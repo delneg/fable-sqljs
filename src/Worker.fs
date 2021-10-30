@@ -3,21 +3,8 @@ module Worker
 open System
 open Fable.Core
 open Fable.Core.JsInterop
-
-//let [<Import("initSqlJs", from="@jlongster/sql.js")>] initSqlJsStatic: SqlJs.InitSqlJsStatic = jsNative
-
-//let getTheme(x: int): IInterface = importDefault "my-lib"
-// JS: import getTheme from "my-lib"
-
 let initSqlJs: SqlJs.InitSqlJsStatic = importDefault "@jlongster/sql.js"
-//type [<AllowNullLiteral>] SQLiteFS = 
-//    [<Emit "new $0($1...)">] abstract Constructor: obj * obj -> obj
-    
 let [<Import("SQLiteFS", from="absurd-sql")>] sqlitefs: obj = jsNative
-
-//let [<Import("IndexedDBBackend", from="absurd-sql/dist/indexeddb-backend")>] IndexedDBBackend: obj = jsNative
-//type IndexedDbBackendType =
-//   [<Emit "new $0($1...)">] abstract Constructor: unit -> obj
 
 let IndexedDBBackend: JsConstructor = importDefault "absurd-sql/dist/indexeddb-backend"
 
