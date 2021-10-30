@@ -5,6 +5,11 @@
 - comlink: WebWorker RPC
 
 
+##Demo:
+
+
+https://thirsty-goldberg-7a9141.netlify.app/
+
 Based on:
 [AbsurdSQL with type orm example](https://github.com/mizchi/absurd-sql-example-with-typeorm)
 ## Develop
