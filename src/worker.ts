@@ -29,7 +29,7 @@ async function setupSqljs(dbPath: string) {
       // @ts-ignore
       super(dbPath, { filename: true });
       // Set indexeddb page size
-      this.exec(`PRAGMA page_size=8192;PRAGMA journal_mode=MEMORY;`);
+      this.exec(`PRAGMA page_size=8192;PRAGMA journal_mode=MEMORY;PRAGMA mmap_size=0;PRAGMA synchronous=NORMAL;PRAGMA temp_store=MEMORY`);
     }
   }
   _db = new PatchedDatabase();
@@ -38,15 +38,6 @@ async function setup() {
   // with /sql/ namespace
   const DBNAME = "/sql/db.sqlite";
   await setupSqljs(DBNAME);
-  // conn = await createConnection({
-  //   type: "sqljs", // this connection search window.SQL on browser
-  //   location: DBNAME,
-  //   autoSave: false, // commit by absurd-sql
-  //   synchronize: true,
-  //   entities: [User],
-  //   logging: ["query", "schema"],
-  // });
-  // userRepository = conn.getRepository(User);
 }
 
 async function execRaw(query: string) {

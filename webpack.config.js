@@ -14,7 +14,7 @@ module.exports = (env, argv) => ({
             "Cross-Origin-Embedder-Policy": "require-corp",
         },
     },
-    entry: "./src/index.ts",
+    entry: "./src/App.fs.js",
     resolve: {
         extensions: [".dev.js", ".js", ".json", ".wasm", ".ts", ".tsx"],
         fallback: {

@@ -1,17 +1,20 @@
 {
-  "name": "absurd-example-project-sqljs-typeorm-comlink",
+  "name": "fable-sqljs-absurd-sql-example",
   "keywords": [
     "absurd-sql",
     "comlink",
     "sqlite",
-    "sql.js"
+    "sql.js",
+    "fable",
+    "fsharp"
   ],
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "serve": "webpack serve --mode development",
-    "build": "webpack build --mode production && cp sql-wasm.wasm _headers dist/"
+    "postinstall": "dotnet tool restore",
+    "serve": "dotnet fable watch src --run webpack serve --mode development",
+    "build": "dotnet fable src --run webpack build --mode production && cp sql-wasm.wasm _headers dist/"
   },
   "dependencies": {
     "@jlongster/sql.js": "^1.6.7",
