@@ -14,12 +14,17 @@ let [<Import("createEndpoint","comlink")>] createEndpoint: Symbol = jsNative
 let [<Import("releaseProxy","comlink")>] releaseProxy: Symbol = jsNative
 let [<Import("transferHandlers","comlink")>] transferHandlers: Map<string, TransferHandler<obj, obj>> = jsNative
 
-type [<AllowNullLiteral>] IExports =
-    abstract expose: obj: obj option * ?ep: Protocol.Endpoint -> unit
-    abstract wrap: ep: Protocol.Endpoint * ?target: obj -> Remote<'T>
-    abstract transfer: obj: 'T * transfers: ResizeArray<ArrayBuffer> -> 'T
-    abstract proxy: obj: 'T -> obj
-    abstract windowEndpoint: w: Protocol.PostMessageWithOrigin * ?context: Protocol.EventSource * ?targetOrigin: string -> Protocol.Endpoint
+
+let [<Import("wrap","comlink")>] wrap(ep: Protocol.Endpoint): Remote<'T> = jsNative
+let [<Import("expose","comlink")>] expose(obj: obj option): unit = jsNative
+
+
+//type [<AllowNullLiteral>] IExports =
+//    abstract expose: obj: obj option * ?ep: Protocol.Endpoint -> unit
+//    abstract wrap: ep: Protocol.Endpoint * ?target: obj -> Remote<'T>
+//    abstract transfer: obj: 'T * transfers: ResizeArray<ArrayBuffer> -> 'T
+//    abstract proxy: obj: 'T -> obj
+//    abstract windowEndpoint: w: Protocol.PostMessageWithOrigin * ?context: Protocol.EventSource * ?targetOrigin: string -> Protocol.Endpoint
 
 /// Interface of values that were marked to be proxied with `comlink.proxy()`.
 /// Can also be implemented by classes.
@@ -55,8 +60,8 @@ type [<AllowNullLiteral>] ProxyMethods =
 //    abstract ``[createEndpoint]``: (unit -> Promise<MessagePo>) with get, set
     abstract ``[releaseProxy]``: (unit -> unit) with get, set
 
-type [<AllowNullLiteral>] Remote<'T> =
-    interface end
+type Remote<'T> =
+    'T
 
 type MaybePromise<'T> =
     U2<Promise<'T>, 'T>

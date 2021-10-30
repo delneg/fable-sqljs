@@ -1,49 +1,60 @@
 module App
 
+open Browser
 open Fable.Core
 open Fetch
 open Thoth.Json
 
-let [<Import("initBackend", from="absurd-sql/dist/indexeddb-main-thread")>] initBackend: unit -> unit = jsNative
+let [<Import("initBackend", from="absurd-sql/dist/indexeddb-main-thread")>] initBackend: obj -> unit = jsNative
+module Url =
+    type URL =
+      abstract hash: string with get, set
+      abstract host: string with get, set
+      abstract hostname: string with get, set
+      abstract href: string with get, set
+      abstract origin: string
+      abstract password: string with get, set
+      abstract pathname: string with get, set
+      abstract port: string with get, set
+      abstract protocol: string with get, set
+      abstract search: string with get, set
+      abstract username: string with get, set
+//      abstract searchParams: URLSearchParams
+      abstract toString: unit -> string
+      abstract toJSON: unit -> string
+    
+    type URLType =
+      [<Emit("new $0($1,import.meta.url)")>] abstract CreateImportMetaUrl: url: string -> URL
+    let [<Global>] URL: URLType = jsNative
+module CustomWorker =
+    type CustomWorkerConstructor =
+      [<Emit("new $0($1...)")>] abstract Create: url: Url.URL * ?options: Browser.Types.WorkerOptions -> Browser.Types.Worker
+      
+    let [<Global>] Worker: CustomWorkerConstructor = jsNative
+    
+    
+let worker = CustomWorker.Worker.Create(Url.URL.CreateImportMetaUrl("./Worker"))
+
+initBackend(worker)
+
+let api: Comlink.Remote<Worker.IApi> = Comlink.wrap(worker :?> Comlink.Protocol.Endpoint)
 
 
+let createKvTableQuery =
+  "CREATE TABLE IF NOT EXISTS kv (
+    key TEXT PRIMARY KEY,
+    value TEXT
+  )"
 
-// we get a json from our fetch request with a url field
-// so we create this type to map the json object
-type PictureInfo = { Url : string }
 
 let window = Browser.Dom.window
-
-// this simple function takes an url, creates an img element and add it to our myDogContainer div created in index.html
-let showPic url =
-  // make image mutable since we need to mutate it's src field
-  let mutable image : Browser.Types.HTMLImageElement = unbox window.document.createElement "img"
-  let container = window.document.getElementById "myDogContainer"
-  image.src <- url
-  image.width <- 200.
-  container.appendChild image |> ignore // ignore means we don't need to use the return value. Since F# is a functional language we always do return something.
-
-// This function will fetch a random dog url every reload of the page
-let getRandomDogImage url =
-    fetch url [] // use the fetch api to load our resource
-    |> Promise.bind (fun res -> res.text()) // get the resul
-    |> Promise.map (fun txt -> // bind the result to make further operation
-
-      // Use Thoth, a F# library to decode the json message
-      // the message will come as: {"url":"https://random.dog/580ce3c8-a8bf-48a8-92cc-68d1955c7dc8.jpg"}
-      // We tell Thoth to decode this and map the Json to our PictureInfo type.
-      let decoded = Decode.Auto.fromString<PictureInfo> (txt, caseStrategy = CamelCase)
-      match decoded with
-      | Ok catURL ->  // everything went well! great!
-        let actualDogURL = catURL.Url
-        printfn "Woof! Woof! %s" actualDogURL
-        showPic actualDogURL
-      | Error decodingError -> // oh the decoder encountered an error. The string that was sent back from our fetch request does not map well to our PictureInfo type.
-        failwith (sprintf "was unable to decode: %s. Reason: %s" txt decodingError)
-      )
-
-// start our app!
-getRandomDogImage "https://random.dog/woof.json" |> ignore
-printfn "done!"
-
-
+let init() = promise {
+  window.document.body.innerHTML <- "Loading..."
+  do! api.setup()
+  window.document.body.innerHTML <- "Worker ready"
+  let! res = api.execRaw(createKvTableQuery)
+  JS.console.log(res)
+}
+init()
+|> Promise.catch (fun x -> JS.console.error(x))
+|> Promise.start

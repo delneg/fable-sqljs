@@ -14,8 +14,6 @@ let [<Import("SQLiteFS", from="absurd-sql")>] sqlitefs: obj = jsNative
 
 let [<Import("default", from="bsurd-sql/dist/indexeddb-backend")>] IndexedDBBackend: obj = jsNative
 
-let [<Import("default","comlink")>] comlink: Comlink.IExports = jsNative
-
 let mutable _db : SqlJs.Database option = None
 
 
@@ -58,10 +56,11 @@ let execRaw (query: string) = promise {
 }
 
 type IApi =
-   abstract member execRaw: unit -> JS.Promise<ResizeArray<SqlJs.QueryExecResult>>
+   abstract member execRaw: string -> JS.Promise<ResizeArray<SqlJs.QueryExecResult>>
    abstract member setup: unit -> JS.Promise<unit>
       
    
-comlink.expose(Some(createObj [ "setup",setup :> obj; "execRaw", execRaw :> obj ]))
+let api = createObj [ "setup",setup :> obj; "execRaw", execRaw :> obj ]
+Comlink.expose(api :?> obj option)
    
    
