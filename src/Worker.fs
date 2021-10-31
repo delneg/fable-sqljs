@@ -10,6 +10,7 @@ let IndexedDBBackend: JsConstructor = importDefault "absurd-sql/dist/indexeddb-b
 
 
 let pragmaParams = [|
+   "PRAGMA cache_size=-5000"
    "PRAGMA page_size=8192"
    "PRAGMA journal_mode=MEMORY"
    "PRAGMA mmap_size=0"
@@ -44,6 +45,7 @@ let setupSqlJs (dbPath:string) = promise {
    JS.console.log("Executing...")
    JS.console.log(pragmaString)
    db?exec(pragmaString)
+   db?exec("VACUUM")
    _db <- Some db
 }
 
